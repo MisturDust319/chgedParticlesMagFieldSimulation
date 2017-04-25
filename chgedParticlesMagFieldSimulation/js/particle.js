@@ -31,12 +31,32 @@
         //s_f = s_i + vt + 0.5a*t^2
         //a simple kinematics equation
         //  applied in a not so simple way...
-        this.position.addVectors(
-            this.velocity.clone().multiplyScalar(
-                time),
+        var velocity_comp = this.velocity.clone().multiplyScalar(
+            time);
+        var accel_comp =
             this.acceleration.clone().multiplyScalar(
                 time * time / 2
-            )
+            );
+        this.position.addVectors(
+            velocity_comp,
+            accel_comp
         )
+    }
+    accelerate: function (acceleration_vectors) {
+        this.setAcceleration(acceleration_vectors.reduce(function (prev, cur) {
+            prev.add(cur);
+            //just a vector sum of previous and current values,
+            //  starting w/ current acceleration
+        }, this.acceleration)
+        )
+    }
+    applyForce: function (force_vectors) {
+        this.setAcceleration(force_vectors.reduce(function (prev, cur) {
+            var cur_accel = cur.clone();
+            cur_accel.divideScalar(this.mass);
+            //copy cur_accel, then divide by the particle's mass to
+            //get an acceleration vector
+            prev.add(cur_accel);
+        }, this.acceleration))
     }
 }
