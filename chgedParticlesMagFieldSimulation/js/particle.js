@@ -1,4 +1,8 @@
-﻿Particle.prototype = {
+﻿consts = {
+    fundamental_charge: 1.61.toExponential(-19)
+};
+
+Particle.prototype = {
     mass: 0,
     position: THREE.Vector3(0, 0, 0),
     velocity: THREE.Vector3(0, 0, 0),
@@ -42,7 +46,7 @@
             accel_comp
         )
     }
-    accelerate: function (acceleration_vectors) {
+    accelerate: function(acceleration_vectors) {
         this.setAcceleration(acceleration_vectors.reduce(function (prev, cur) {
             prev.add(cur);
             //just a vector sum of previous and current values,
