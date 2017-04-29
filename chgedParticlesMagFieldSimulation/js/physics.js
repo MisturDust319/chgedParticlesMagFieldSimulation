@@ -22,7 +22,7 @@ function inheritPrototype(childObject, parentObject) {
 
 consts = {
     fundamental_charge: 1.61e-19,
-    mu_naught = 4 * Math.PI * 1.0e-7,
+    mu_naught = 4 * Math.PI * 1.0e-7
 
 };
 
