@@ -40,6 +40,9 @@ var cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 //cube will now be added to the scene
 
+//test the Particle_Handler()
+var part = new Particle_Handler();
+
 camera.position.z = 5;
 //set camera's z position to 5
 
