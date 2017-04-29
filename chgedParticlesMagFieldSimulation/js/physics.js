@@ -21,15 +21,13 @@ function inheritPrototype(childObject, parentObject) {
 }
 
 consts = {
-    fundamental_charge: 1.61e-19
+    fundamental_charge: 1.61e-19,
+    mu_naught = 4 * Math.PI * 1.0e-7,
+
 };
 
-function Particle(start_mass, start_position,
-        start_velocity, start_acceleration) {
+function Particle(start_mass) {
     this.mass = start_mass;
-    this.position = start_position;
-    this.velocity = start_velocity;
-    this.acceleration = start_acceleration;
 }
 
 Particle.prototype = {
@@ -47,6 +45,18 @@ Particle.prototype = {
             this.position = new_position;
             //if the data type is valid, change
             //this.position to new_position
+        }
+    },
+    setVelocity: function (new_velocity) {
+        //check if new_velocity is 3vec
+        //if not, throw type error
+        if (!(Object.prototype.toString.call(new_velocity) = "THREE.Vector3")) {
+            throw new TypeError("you must pass a THREE.Vector3 obj\n as input for setvelocity");
+        }
+        else {
+            this.velocity = new_velocity;
+            //if the data type is valid, change
+            //this.velocity to new_velocity
         }
     },
     setAcceleration: function (new_acceleration) {
@@ -93,4 +103,56 @@ Particle.prototype = {
             prev.add(cur_accel);
         }, this.acceleration))
     }
+}
+
+function ChargedParticle(start_mass) {
+    this.mass = start_mass;
+}
+ChargedParticle.prototype = {
+    charge: 0,
+    magneticField: new THREE.Vector3(0, 0, 0),
+    setCharge: function (new_charge) {
+        this.charge = new_charge;
+    }
+    setMagneticField: function (other_position) {
+        var radius = new Vector3(0, 0, 0);
+        radius.copy(other_position);
+        radius.sub(this.position);
+        //gets the radius between the involved particles
+
+        this.magneticField.crossVectors(
+            this.velocity, radius.clone().normalize()
+        );
+        //field =  vec(v) x vec(r.normal)
+        this.magneticField.multiplyScalar(
+            this.charge *
+            radius.lengthSq() *
+            1.0e-7
+            )
+    }
+}
+//make chargedParticle inherit from particle
+inheritPrototype(ChargedParticle, Particle);
+
+function Electron() {
+    this.charge = consts.fundamental_charge * -1;
+    //a proton is a charged particle w/
+    //a charge of e
+}
+//make electron inherit from chargedParticle
+inheritPrototype(Electron, ChargedParticle);
+
+function Proton() {
+    this.charge = consts.fundamental_charge;
+    //a proton is a charged particle w/
+    //a charge of e
+}
+//make electron inherit from chargedParticle
+inheritPrototype(Proton, ChargedParticle);
+
+//functions
+//forces
+function force_mag_point(charge, velocity, field) {
+    var new_vec = new THREE.Vector3().cross(velocity, field);
+    return new_vec.multiplyScalar(charge);
 }
