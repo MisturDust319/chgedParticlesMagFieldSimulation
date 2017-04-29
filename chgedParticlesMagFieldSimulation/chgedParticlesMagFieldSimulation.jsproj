@@ -69,6 +69,7 @@
     <Content Include="js\main.js" />
     <Content Include="css\default.css" />
     <Content Include="js\particle.js" />
+    <Content Include="js\three.js" />
     <None Include="chgedParticlesMagFieldSimulation_TemporaryKey.pfx" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\$(WMSJSProjectDirectory)\Microsoft.VisualStudio.$(WMSJSProject).targets" />
