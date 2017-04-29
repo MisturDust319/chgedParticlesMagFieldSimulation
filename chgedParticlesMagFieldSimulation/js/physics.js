@@ -21,14 +21,22 @@ function inheritPrototype(childObject, parentObject) {
 }
 
 consts = {
-    fundamental_charge: 1.61.toExponential(-19)
+    fundamental_charge: 1.61e-19
 };
+
+function Particle(start_mass, start_position,
+        start_velocity, start_acceleration) {
+    this.mass = start_mass;
+    this.position = start_position;
+    this.velocity = start_velocity;
+    this.acceleration = start_acceleration;
+}
 
 Particle.prototype = {
     mass: 0,
-    position: THREE.Vector3(0, 0, 0),
-    velocity: THREE.Vector3(0, 0, 0),
-    acceleration: THREE.Vector3(0, 0, 0),
+    position: new THREE.Vector3(0, 0, 0),
+    velocity: new THREE.Vector3(0, 0, 0),
+    acceleration: new THREE.Vector3(0, 0, 0),
     setPosition: function (new_position) {
         //check if new_postion is 3vec
         //if not, throw type error
@@ -67,15 +75,15 @@ Particle.prototype = {
             velocity_comp,
             accel_comp
         )
-    }
-    accelerate: function(acceleration_vectors) {
+    },
+    accelerate: function (acceleration_vectors) {
         this.setAcceleration(acceleration_vectors.reduce(function (prev, cur) {
             prev.add(cur);
             //just a vector sum of previous and current values,
             //  starting w/ current acceleration
         }, this.acceleration)
         )
-    }
+    },
     applyForce: function (force_vectors) {
         this.setAcceleration(force_vectors.reduce(function (prev, cur) {
             var cur_accel = cur.clone();
