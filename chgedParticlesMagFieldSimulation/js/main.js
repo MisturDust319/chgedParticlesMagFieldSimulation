@@ -1,5 +1,5 @@
 ﻿//object to hold the state of various things
-var state = {
+state = {
     play: true, //if true, keep updateing positions
 }
 //all threejs progs need these three things:
@@ -34,14 +34,22 @@ var part = new Particle_Handler(scene);
 //set up GUI
 var MainMenu = function() {
     this.addParticle = function () {
-        console.log("Dummy for addParticle")
+        console.log("Dummy for addParticle");
+    }
+    this.play_pause = function () {
+        state.play = !(state.play);
     }
 }
-var menu = new MainMenu();
-var gui = new dat.GUI();
-gui.add(menu, "addParticle");
 
+var Supervisor = function () {
+    this.menu = new MainMenu();
+    var gui = new dat.GUI();
+    
+    gui.add(this.menu, "addParticle");
+    gui.add(this.menu, "play_pause");
+}
 
+var supervisor = new Supervisor();
 camera.position.z = 5;
 //set camera's z position to 5
 //a simple render loop
