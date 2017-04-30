@@ -21,9 +21,7 @@ function inheritPrototype(childObject, parentObject) {
 }
 
 consts = {
-    fundamental_charge: 1.61e-19,
-    mu_naught = 4 * Math.PI * 1.0e-7
-
+    fundamental_charge: 1.61e-19
 };
 
 function Particle(start_mass) {
@@ -113,7 +111,7 @@ ChargedParticle.prototype = {
     magneticField: new THREE.Vector3(0, 0, 0),
     setCharge: function (new_charge) {
         this.charge = new_charge;
-    }
+    },
     setMagneticField: function (other_position) {
         var radius = new Vector3(0, 0, 0);
         radius.copy(other_position);
