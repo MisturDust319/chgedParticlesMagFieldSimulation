@@ -31,22 +31,40 @@ document.body.appendChild(renderer.domElement);
 //test the Particle_Handler()
 var part = new Particle_Handler(scene);
 
-//set up GUI
-var MainMenu = function() {
-    this.addParticle = function () {
-        console.log("Dummy for addParticle");
-    }
-    this.play_pause = function () {
-        state.play = !(state.play);
-    }
-}
+
 
 var Supervisor = function () {
+    //holds particles for simulation
+    this.particles = [];
+    var supervisor = this; //for helping
+    //keep things organized
+
+    //set up GUI
+    var MainMenu = function () {
+        this.addParticle = function () {
+            console.log("Dummy for addParticle");
+        }
+        this.play_pause = function () {
+            state.play = !(state.play);
+        }
+        this.particles = supervisor.particles;
+    }
+
     this.menu = new MainMenu();
+
+    //create menu obj, and a GUI obj
     var gui = new dat.GUI();
-    
-    gui.add(this.menu, "addParticle");
+
+    //used for tracking the # of particles by type
+    this.electronCount = 0;
+    this.protonCount = 0;
+
+    //attacch items to GUI
     gui.add(this.menu, "play_pause");
+
+    gui.add(this.menu, "addParticle");
+    gui.add(this.menu, "particles", this.menu.particles);
+    
 }
 
 var supervisor = new Supervisor();
