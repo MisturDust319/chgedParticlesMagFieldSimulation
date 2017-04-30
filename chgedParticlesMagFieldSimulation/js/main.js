@@ -1,5 +1,7 @@
-﻿// simple three.js program
-
+﻿//object to hold the state of various things
+var state = {
+    play: true, //if true, keep updateing positions
+}
 //all threejs progs need these three things:
 //  a scene, a camera, and a renderer
 var scene = new THREE.Scene();
@@ -25,27 +27,23 @@ renderer.setSize(window.innerWidth,
 document.body.appendChild(renderer.domElement);
 //add the renderer object to the canvas element.
 
-var geometry = new THREE.BoxGeometry(1, 1, 1);
-//BoxGeometry streamlines the setup of all the vertices
-//  and the fill of the cube
-var material = new THREE.MeshBasicMaterial(
-    { color: 0xcc0000 }
-);
-//MeshBasicMaterial will be used to paint
-//the cube a color (in this case)
-var cube = new THREE.Mesh(geometry, material);
-//Mesh takes a geometry, and a material,
-//  and applies the material to the geometry
-//  which can be inserted into the scene
-//scene.add(cube);
-//cube will now be added to the scene
 
 //test the Particle_Handler()
 var part = new Particle_Handler(scene);
 
+//set up GUI
+var MainMenu = function() {
+    this.addParticle = function () {
+        console.log("Dummy for addParticle")
+    }
+}
+var menu = new MainMenu();
+var gui = new dat.GUI();
+gui.add(menu, "addParticle");
+
+
 camera.position.z = 5;
 //set camera's z position to 5
-
 //a simple render loop
 //this will make a loop to draw scene 60 times
 //  a sec
@@ -57,9 +55,11 @@ function render() {
     //  pause when user chgs tabs
 
     //a little animation
-    cube.rotation.x += 0.1;
-    cube.rotation.y += 0.1;
-
+    //cube.rotation.x += 0.1;
+    //cube.rotation.y += 0.1;
+    if (state.play) {
+        console.log("Update dummy");
+    }
     renderer.render(scene, camera);
 }
 
