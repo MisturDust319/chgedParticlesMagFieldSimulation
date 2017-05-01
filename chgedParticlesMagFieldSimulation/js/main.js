@@ -63,16 +63,15 @@ var Supervisor = function (scene) {
         console.log(this.particle.particle.position);
         temp_vec.copy(this.particle.particle.position);
         //store the particles' position
-        this.position = {
-            x: temp_vec.getComponent(0),
-            y: temp_vec.getComponent(1),
-            z: temp_vec.getComponent(2)
-        }
+        this["pos x"] = temp_vec.getComponent(0);
+        this["pos y"] = temp_vec.getComponent(1);
+        this["pos z"] = temp_vec.getComponent(2);
+        
         this["apply new position"] = function () {
             this.particle.particle.position = new THREE.Vector3(
-                this.position.x,
-                this.position.y,
-                this.position.z
+                this["pos x"],
+                this["pos y"],
+                this["pos z"]
             );
             //set the position of the selected particle
         }
@@ -80,17 +79,16 @@ var Supervisor = function (scene) {
         //create a vec to hold the values from the particle
         temp_vec = this.particle.particle.velocity;
         //store the particles' velocity
-        this.velocity = {
-            x: temp_vec.getComponent(0),
-            y: temp_vec.getComponent(1),
-            z: temp_vec.getComponent(2)
-        }
+        
+        this["vel x"] = temp_vec.getComponent(0);
+        this["vel y"] = temp_vec.getComponent(1);
+        this["vel z"] = temp_vec.getComponent(2);
 
         this["apply new velocity"] = function () {
             this.particle.particle.velocity = new THREE.Vector3(
-                this.velocity.x,
-                this.velocity.y,
-                this.velocity.z
+                this["vel x"],
+                this["vel y"],
+                this["vel z"]
             );
             //set the velocity of the selected particle
         }
@@ -98,16 +96,16 @@ var Supervisor = function (scene) {
         //create a vec to hold the values from the particle
         temp_vec = this.particle.particle.acceleration;
         //store the particles' acceleration\
-        this.acceleration = {
-            x: temp_vec.getComponent(0),
-            y: temp_vec.getComponent(1),
-            z: temp_vec.getComponent(2)
-        }
+        
+        this["accel x"] = temp_vec.getComponent(0);
+            this["accel y"] = temp_vec.getComponent(1);
+            this["accel z"] = temp_vec.getComponent(2);
+
         this["apply new acceleration"] = function () {
             this.particle.particle.acceleration = new THREE.Vector3(
-                this.acceleration.x,
-                this.acceleration.y,
-                this.acceleration.z
+                this["accel x"],
+                this["accel y"],
+                this["accel z"]
             );
             //set the acceleration of the selected particle
         }
@@ -115,18 +113,17 @@ var Supervisor = function (scene) {
         //create a vec to hold the values from the particle
         temp_vec = this.particle.particle.magnetic_field;
         //store the particles' magnetic_field
-        this.magnetic_field = {
-            x: temp_vec.getComponent(0),
-            y: temp_vec.getComponent(1),
-            z: temp_vec.getComponent(2)
-        }
+        
+        this["mag x"] = temp_vec.getComponent(0);
+        this["mag y"] = temp_vec.getComponent(1);
+        this["mag z"] = temp_vec.getComponent(2);
         this["apply new magnetic field"] = function () {
             this.particle.particle.magnetic_field = new THREE.Vector3(
-                this.magnetic_field.x,
-                this.magnetic_field.y,
-                this.magnetic_field.z
+                this["mag x"],
+                this["mag y"],
+                this["mag z"]
+                //set the magnetic_field of the selected particle
             );
-            //set the magnetic_field of the selected particle
         }
     }
 
@@ -147,9 +144,9 @@ var Supervisor = function (scene) {
 
     //particle stats
     var f_position = gui.addFolder('position');
-    f_position.add(this.menu, 'position.x');
-    f_position.add(this.menu, 'position.y');
-    f_position.add(this.menu, 'position.z');
+    f_position.add(this.menu, 'pos x');
+    f_position.add(this.menu, 'pos y');
+    f_position.add(this.menu, 'pos z');
 
     f_position.add(this.menu, 'apply new position');
     
