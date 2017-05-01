@@ -36,7 +36,7 @@ document.body.appendChild(renderer.domElement);
 var Supervisor = function (scene) {
     //holds particles for simulation
     this.particles = {
-        "particle 1": new Particle_Handler(scene)
+        "particle 1": new ChargedParticle(scene)
     }
     var supervisor = this; //for helping
     //keep things organized
@@ -55,12 +55,12 @@ var Supervisor = function (scene) {
         this.particle = this.particles["particle 1"];
 
         //particle stats
-        this.mass = this.particle.particle.mass;
-        this.charge = this.particle.particle.charge;
+        this.mass = this.particle.mass;
+        this.charge = this.particle.charge;
 
         var temp_vec = new THREE.Vector3(0, 0, 0);
         //create a vec to hold the values from the particle
-        temp_vec= this.particle.particle.position;
+        temp_vec= this.particle.mesh.position;
         //store the particles' position
         this["pos x"] = temp_vec.getComponent(0);
         this["pos y"] = temp_vec.getComponent(1);
@@ -68,20 +68,20 @@ var Supervisor = function (scene) {
         
         this["apply new position"] = function () {
 
-            this.particle.particle.position.x =
-                this["pos x"];
-            this.particle.particle.position.y =
-                this["pos y"];
-            this.particle.particle.position.z =
-            this["pos z"];
+            this.particle.setPosition(
+                this["pos x"],
+                this["pos y"],
+                this["pos z"]
+            );
+
             //set the position of the selected particle
-            console.log(this.particle.particle.position.z);
+            console.log(this.particle.position.z);
             console.log(this["pos z"]);
 
         }
         
         //create a vec to hold the values from the particle
-        temp_vec = this.particle.particle.velocity;
+        temp_vec = this.particle.velocity;
         //store the particles' velocity
         
         this["vel x"] = temp_vec.getComponent(0);
@@ -89,7 +89,7 @@ var Supervisor = function (scene) {
         this["vel z"] = temp_vec.getComponent(2);
 
         this["apply new velocity"] = function () {
-            this.particle.particle.velocity = new THREE.Vector3(
+            this.particle.velocity = new THREE.Vector3(
                 this["vel x"],
                 this["vel y"],
                 this["vel z"]
@@ -98,7 +98,7 @@ var Supervisor = function (scene) {
         }
 
         //create a vec to hold the values from the particle
-        temp_vec = this.particle.particle.acceleration;
+        temp_vec = this.particle.acceleration;
         //store the particles' acceleration\
         
         this["accel x"] = temp_vec.getComponent(0);
@@ -106,7 +106,7 @@ var Supervisor = function (scene) {
             this["accel z"] = temp_vec.getComponent(2);
 
         this["apply new acceleration"] = function () {
-            this.particle.particle.acceleration = new THREE.Vector3(
+            this.particle.acceleration = new THREE.Vector3(
                 this["accel x"],
                 this["accel y"],
                 this["accel z"]
@@ -115,14 +115,14 @@ var Supervisor = function (scene) {
         }
 
         //create a vec to hold the values from the particle
-        temp_vec = this.particle.particle.magnetic_field;
+        temp_vec = this.particle.magnetic_field;
         //store the particles' magnetic_field
         
         this["mag x"] = temp_vec.getComponent(0);
         this["mag y"] = temp_vec.getComponent(1);
         this["mag z"] = temp_vec.getComponent(2);
         this["apply new magnetic field"] = function () {
-            this.particle.particle.magnetic_field = new THREE.Vector3(
+            this.particle.magnetic_field = new THREE.Vector3(
                 this["mag x"],
                 this["mag y"],
                 this["mag z"]
@@ -178,9 +178,6 @@ function render() {
     //cube.rotation.y += 0.1;
     if (state.play) {
         console.log("Update dummy");
-        for (var key in supervisor.particles) {
-            supervisor.particles[key].update();
-        }
     }
     renderer.render(scene, camera);
 }

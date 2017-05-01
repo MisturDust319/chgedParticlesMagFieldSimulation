@@ -2,11 +2,36 @@
     fundamental_charge: 1.61e-19
 };
 
-function Particle(start_mass) {
+function Particle(scene, start_mass, obj_color) {
+    //default color setting
+    if (!obj_color) {
+        obj_color = "#ffff00";
+    }
+    //default mass
+    if (!start_mass) {
+        start_mass = 1.0;
+    }
+    //make a new 3d sphere mesh
+    var geometry = new THREE.SphereGeometry(1, 32, 32);
+    var material = new THREE.MeshBasicMaterial({ color: obj_color });
+
+    this.mesh = new THREE.Mesh(
+        geometry,
+        material
+    );
+    //add it to scene
+    scene.add(this.mesh);
+
+
+    //basic properties of a particle
     this.mass = start_mass;
-    this.position = new THREE.Vector3(0, 0, 0);
+    //any position data will use the mesh's position
     this.velocity = new THREE.Vector3(0, 0, 0);
     this.acceleration = new THREE.Vector3(0, 0, 0);
+
+    //make a new 3d sphere mesh
+    var geometry = new THREE.SphereGeometry(1, 32, 32);
+    var material = new THREE.MeshBasicMaterial({ color: obj_color });
 }
 
 Particle.prototype = {
@@ -21,7 +46,7 @@ Particle.prototype = {
             throw new TypeError("you must pass a THREE.Vector3 obj\n as input for setPosition");
         }
         else {
-            this.position = new_position;
+            this.mesh.position = new_position;
             //if the data type is valid, change
             //this.position to new_position
         }
@@ -60,7 +85,7 @@ Particle.prototype = {
             this.acceleration.clone().multiplyScalar(
                 time * time / 2
             );
-        this.position.addVectors(
+        this.mesh.position.addVectors(
             velocity_comp,
             accel_comp
         )
@@ -87,9 +112,9 @@ Particle.prototype = {
 var tmp = function () { };
 tmp.prototype = Particle.prototype;
 
-function ChargedParticle(start_mass) {
+function ChargedParticle(scene, start_mass, obj_color) {
+    Particle.call(this, start_mass, obj_color, scene);
     this.magnetic_field = new THREE.Vector3(0, 0, 0);
-    Particle.call(this, start_mass);
 }
 //these two functions should cause ChargedParticle to 
 //inherit from particle
@@ -120,8 +145,8 @@ ChargedParticle.prototype.set_magnetic_field = function (other_position) {
 };
 
 
-function Electron() {
-    ChargedParticle.call(this, 9.11e-31);
+function Electron(scene) {
+    ChargedParticle.call(this, scene, 9.11e-31, "#0000ff");
     //electron has mass of 9.11e-31 kg
     this.charge = consts.fundamental_charge * -1;
     //a electron is a charged particle w/
@@ -133,8 +158,8 @@ tmp.prototype = ChargedParticle.prototype;
 Electron.prototype = new tmp();
 Electron.prototype.constructor = Electron;
 
-function Proton() {
-    ChargedParticle.call(this, 1.67e-27);
+function Proton(scene) {
+    ChargedParticle.call(this, scene, 1.67e-27, "#ff0000");
     this.charge = consts.fundamental_charge;
     //a proton is a charged particle w/
     //a charge of e
