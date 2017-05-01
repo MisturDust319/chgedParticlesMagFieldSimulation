@@ -60,20 +60,24 @@ var Supervisor = function (scene) {
 
         var temp_vec = new THREE.Vector3(0, 0, 0);
         //create a vec to hold the values from the particle
-        console.log(this.particle.particle.position);
-        temp_vec.copy(this.particle.particle.position);
+        temp_vec= this.particle.particle.position;
         //store the particles' position
         this["pos x"] = temp_vec.getComponent(0);
         this["pos y"] = temp_vec.getComponent(1);
         this["pos z"] = temp_vec.getComponent(2);
         
         this["apply new position"] = function () {
-            this.particle.particle.position = new THREE.Vector3(
-                this["pos x"],
-                this["pos y"],
-                this["pos z"]
-            );
+
+            this.particle.particle.position.x =
+                this["pos x"];
+            this.particle.particle.position.y =
+                this["pos y"];
+            this.particle.particle.position.z =
+            this["pos z"];
             //set the position of the selected particle
+            console.log(this.particle.particle.position.z);
+            console.log(this["pos z"]);
+
         }
         
         //create a vec to hold the values from the particle
@@ -160,16 +164,23 @@ camera.position.z = 5;
 //  a sec
 //
 function render() {
+    renderer.setClearColor(0x000000, 1);
+
     requestAnimationFrame(render);
     //requestAnimationFrame() is like setInterval()
     //  but can do other things, like automatically
     //  pause when user chgs tabs
+
+
 
     //a little animation
     //cube.rotation.x += 0.1;
     //cube.rotation.y += 0.1;
     if (state.play) {
         console.log("Update dummy");
+        for (var key in supervisor.particles) {
+            supervisor.particles[key].update();
+        }
     }
     renderer.render(scene, camera);
 }
