@@ -10,6 +10,10 @@ var camera = new THREE.PerspectiveCamera(
     window.innerWidth / window.innerHeight,
     0.1, 1000
 );
+//add some light
+var lighting = new THREE.PointLight("#2E2E09", 1, 100);
+scene.add(lighting);
+
 // args
 // field of view
 // aspect ratio
@@ -167,7 +171,7 @@ camera.position.z = 5;
 //  a sec
 //
 function render() {
-    renderer.setClearColor(0x000000, 1);
+    renderer.setClearColor("#000000", 1);
 
     requestAnimationFrame(render);
     //requestAnimationFrame() is like setInterval()

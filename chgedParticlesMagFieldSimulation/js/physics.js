@@ -57,7 +57,7 @@ Particle.prototype = {
         //returns the particle mesh's position
         //as a three.js Vector3
         return this.mesh.position;
-    }
+    },
     setVelocity: function (new_velocity) {
         //check if new_velocity is 3vec
         //if not, throw type error
