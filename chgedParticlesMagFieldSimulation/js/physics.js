@@ -28,10 +28,6 @@ function Particle(scene, start_mass, obj_color) {
     //any position data will use the mesh's position
     this.velocity = new THREE.Vector3(0, 0, 0);
     this.acceleration = new THREE.Vector3(0, 0, 0);
-
-    //make a new 3d sphere mesh
-    var geometry = new THREE.SphereGeometry(1, 32, 32);
-    var material = new THREE.MeshBasicMaterial({ color: obj_color });
 }
 
 Particle.prototype = {
@@ -40,17 +36,28 @@ Particle.prototype = {
     velocity: null,
     acceleration: null,
     setPosition: function (new_position) {
+        //console.log(new_position.toString);
         //check if new_postion is 3vec
         //if not, throw type error
-        if (!(Object.prototype.toString.call(new_position) = "THREE.Vector3")) {
-            throw new TypeError("you must pass a THREE.Vector3 obj\n as input for setPosition");
-        }
-        else {
-            this.mesh.position = new_position;
+        //if (!(Object.prototype.toString.call(new_position) == "THREE.Vector3")) {
+        //    throw new TypeError("you must pass a THREE.Vector3 obj\n as input for setPosition");
+        //}
+        //else {
+
+        this.mesh.position.set(
+            new_position.x,
+            new_position.y,
+            new_position.z
+      );
             //if the data type is valid, change
             //this.position to new_position
-        }
+        //}
     },
+    getPosition: function () {
+        //returns the particle mesh's position
+        //as a three.js Vector3
+        return this.mesh.position;
+    }
     setVelocity: function (new_velocity) {
         //check if new_velocity is 3vec
         //if not, throw type error
@@ -85,10 +92,12 @@ Particle.prototype = {
             this.acceleration.clone().multiplyScalar(
                 time * time / 2
             );
-        this.mesh.position.addVectors(
-            velocity_comp,
-            accel_comp
-        )
+        this.mesh.setPosition(
+            this.getPosition.addVectors(
+                velocity_comp,
+                accel_comp
+            )
+        );
     },
     accelerate: function (acceleration_vectors) {
         this.setAcceleration(acceleration_vectors.reduce(function (prev, cur) {
@@ -113,7 +122,7 @@ var tmp = function () { };
 tmp.prototype = Particle.prototype;
 
 function ChargedParticle(scene, start_mass, obj_color) {
-    Particle.call(this, start_mass, obj_color, scene);
+    Particle.call(this, scene, start_mass, obj_color);
     this.magnetic_field = new THREE.Vector3(0, 0, 0);
 }
 //these two functions should cause ChargedParticle to 

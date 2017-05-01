@@ -2,8 +2,8 @@
 
 function Particle_Handler(scene) {
     //make a new 3d sphere mesh
-    this.geometry = new THREE.SphereGeometry(1, 32, 32);
-    this.material = new THREE.MeshBasicMaterial({ color: "#ffff00" });
+    var geometry = new THREE.SphereGeometry(1, 32, 32);
+    var material = new THREE.MeshBasicMaterial({ color: "#ffff00" });
 
     //add a charged particle
     this.particle = new ChargedParticle(TEST_MASS);

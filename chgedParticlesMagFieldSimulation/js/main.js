@@ -45,6 +45,7 @@ var Supervisor = function (scene) {
     var MainMenu = function () {
         this.addParticle = function () {
             console.log("Dummy for addParticle");
+            console.log("update particle list");
         }
         this.play_pause = function () {
             state.play = !(state.play);
@@ -69,14 +70,16 @@ var Supervisor = function (scene) {
         this["apply new position"] = function () {
 
             this.particle.setPosition(
-                this["pos x"],
-                this["pos y"],
-                this["pos z"]
+                new THREE.Vector3(
+                    this["pos x"],
+                    this["pos y"],
+                    this["pos z"]
+                )
             );
 
             //set the position of the selected particle
-            console.log(this.particle.position.z);
-            console.log(this["pos z"]);
+            //console.log(this.particle.position.z);
+            //console.log(this["pos z"]);
 
         }
         
