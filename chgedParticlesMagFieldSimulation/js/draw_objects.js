@@ -8,13 +8,13 @@ function Particle_Handler(scene) {
             { color: "#ffff00" }
         )
     );
-
+    this.particle = new ChargedParticle(TEST_MASS);
     scene.add(this.mesh);
  
 }
 
 Particle_Handler.prototype = {
-    particle: new Particle(TEST_MASS),
+    particle: null,
     color: "#ffff00",
     mesh: null,
     update: function () {

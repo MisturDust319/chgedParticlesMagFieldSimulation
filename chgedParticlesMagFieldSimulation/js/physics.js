@@ -1,38 +1,19 @@
-﻿if (typeof Object.create !== 'function') {
-    Object.create = function (o) {
-        function F() { }
-
-        F.prototype = o;
-        return new F();
-    };
-}
-//a helper method for dealing with inheritence
-function inheritPrototype(childObject, parentObject) {
-    // As discussed above, we use the Crockford’s method to copy the properties and methods from the parentObject onto the childObject​
-    // So the copyOfParent object now has everything the parentObject has ​
-    var copyOfParent = Object.create(parentObject.prototype);
-
-    //Then we set the constructor of this new object to point to the childObject.​
-    // Why do we manually set the copyOfParent constructor here, see the explanation immediately following this code block.​
-    copyOfParent.constructor = childObject;
-
-    // Then we set the childObject prototype to copyOfParent, so that the childObject can in turn inherit everything from copyOfParent (from parentObject)​
-    childObject.prototype = copyOfParent;
-}
-
-consts = {
+﻿consts = {
     fundamental_charge: 1.61e-19
 };
 
 function Particle(start_mass) {
     this.mass = start_mass;
+    this.position = new THREE.Vector3(0, 0, 0);
+    this.velocity = new THREE.Vector3(0, 0, 0);
+    this.acceleration = new THREE.Vector3(0, 0, 0);
 }
 
 Particle.prototype = {
     mass: 0,
-    position: new THREE.Vector3(0, 0, 0),
-    velocity: new THREE.Vector3(0, 0, 0),
-    acceleration: new THREE.Vector3(0, 0, 0),
+    position: null,
+    velocity: null,
+    acceleration: null,
     setPosition: function (new_position) {
         //check if new_postion is 3vec
         //if not, throw type error
@@ -102,51 +83,65 @@ Particle.prototype = {
         }, this.acceleration))
     }
 }
+//info for inheritence
+var tmp = function () { };
+tmp.prototype = Particle.prototype;
 
 function ChargedParticle(start_mass) {
-    this.mass = start_mass;
+    this.magnetic_field = new THREE.Vector3(0, 0, 0);
+    Particle.call(this, start_mass);
 }
-ChargedParticle.prototype = {
-    charge: 0,
-    magneticField: new THREE.Vector3(0, 0, 0),
-    setCharge: function (new_charge) {
-        this.charge = new_charge;
-    },
-    setMagneticField: function (other_position) {
-        var radius = new Vector3(0, 0, 0);
-        radius.copy(other_position);
-        radius.sub(this.position);
-        //gets the radius between the involved particles
+//these two functions should cause ChargedParticle to 
+//inherit from particle
+ChargedParticle.prototype = new tmp();
+ChargedParticle.prototype.constructor = ChargedParticle;
 
-        this.magneticField.crossVectors(
-            this.velocity, radius.clone().normalize()
-        );
-        //field =  vec(v) x vec(r.normal)
-        this.magneticField.multiplyScalar(
-            this.charge *
-            radius.lengthSq() *
-            1.0e-7
-            )
-    }
-}
-//make chargedParticle inherit from particle
-inheritPrototype(ChargedParticle, Particle);
+ChargedParticle.prototype.charge = 0;
+ChargedParticle.prototype.magnetic_field =
+    new THREE.Vector3(0, 0, 0);
+ChargedParticle.prototype.setCharge = function (new_charge) {
+    this.charge = new_charge;
+};
+ChargedParticle.prototype.set_magnetic_field = function (other_position) {
+    var radius = new Vector3(0, 0, 0);
+    radius.copy(other_position);
+    radius.sub(this.position);
+    //gets the radius between the involved particles
+
+    this.magnetic_field.crossVectors(
+        this.velocity, radius.clone().normalize()
+    );
+    //field =  vec(v) x vec(r.normal)
+    this.magnetic_field.multiplyScalar(
+        this.charge *
+        radius.lengthSq() *
+        1.0e-7
+    )
+};
+
 
 function Electron() {
+    ChargedParticle.call(this, 9.11e-31);
+    //electron has mass of 9.11e-31 kg
     this.charge = consts.fundamental_charge * -1;
-    //a proton is a charged particle w/
+    //a electron is a charged particle w/
     //a charge of e
+
 }
 //make electron inherit from chargedParticle
-inheritPrototype(Electron, ChargedParticle);
+tmp.prototype = ChargedParticle.prototype;
+Electron.prototype = new tmp();
+Electron.prototype.constructor = Electron;
 
 function Proton() {
+    ChargedParticle.call(this, 1.67e-27);
     this.charge = consts.fundamental_charge;
     //a proton is a charged particle w/
     //a charge of e
 }
-//make electron inherit from chargedParticle
-inheritPrototype(Proton, ChargedParticle);
+//make proton inherit from chargedParticle
+Electron.prototype = new tmp();
+Electron.prototype.constructor = Electron;
 
 //functions
 //forces
