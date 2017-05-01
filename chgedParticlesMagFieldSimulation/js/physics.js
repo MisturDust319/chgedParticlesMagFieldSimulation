@@ -136,10 +136,10 @@ ChargedParticle.prototype.magnetic_field =
 ChargedParticle.prototype.setCharge = function (new_charge) {
     this.charge = new_charge;
 };
-ChargedParticle.prototype.set_magnetic_field = function (other_position) {
+ChargedParticle.prototype.get_magnetic_field = function (other_position) {
     var radius = new Vector3(0, 0, 0);
     radius.copy(other_position);
-    radius.sub(this.position);
+    radius.sub(this.getPosition());
     //gets the radius between the involved particles
 
     this.magnetic_field.crossVectors(
@@ -148,9 +148,11 @@ ChargedParticle.prototype.set_magnetic_field = function (other_position) {
     //field =  vec(v) x vec(r.normal)
     this.magnetic_field.multiplyScalar(
         this.charge *
-        radius.lengthSq() *
-        1.0e-7
-    )
+        1.0e-7 /
+        radius.lengthSq()
+    );
+    //field = vec(v) x vec(r.normal) * q * 1e-7/ r^2
+    return this.magnetic_field;
 };
 
 
