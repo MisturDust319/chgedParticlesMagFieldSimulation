@@ -1,6 +1,8 @@
 ﻿//object to hold the state of various things
 state = {
-    play: true, //if true, keep updateing positions
+    play: false, //if true, keep updateing positions
+    //start at false to prevent the particle from moving
+    //from start
 }
 //all threejs progs need these three things:
 //  a scene, a camera, and a renderer
@@ -160,7 +162,7 @@ var Supervisor = function (scene) {
     f_position.add(this.menu, 'pos z');
 
     f_position.add(this.menu, 'apply new position');
-    
+    f_position.open();
 }
 
 var supervisor = new Supervisor(scene);
@@ -184,7 +186,9 @@ function render() {
     //cube.rotation.x += 0.1;
     //cube.rotation.y += 0.1;
     if (state.play) {
-        console.log("Update dummy");
+        for (var key in supervisor.particles) {
+            supervisor.particles[key].update();
+        }
     }
     renderer.render(scene, camera);
 }

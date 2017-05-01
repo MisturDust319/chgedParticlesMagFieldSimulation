@@ -25,6 +25,8 @@ function Particle(scene, start_mass, obj_color) {
 
     //basic properties of a particle
     this.mass = start_mass;
+    //init this object with the time it was created
+    this.time = Date.now();
     //any position data will use the mesh's position
     this.velocity = new THREE.Vector3(0, 0, 0);
     this.acceleration = new THREE.Vector3(0, 0, 0);
@@ -35,6 +37,7 @@ Particle.prototype = {
     position: null,
     velocity: null,
     acceleration: null,
+    time: 0,
     setPosition: function (new_position) {
         //console.log(new_position.toString);
         //check if new_postion is 3vec
@@ -61,14 +64,18 @@ Particle.prototype = {
     setVelocity: function (new_velocity) {
         //check if new_velocity is 3vec
         //if not, throw type error
-        if (!(Object.prototype.toString.call(new_velocity) = "THREE.Vector3")) {
-            throw new TypeError("you must pass a THREE.Vector3 obj\n as input for setvelocity");
-        }
-        else {
-            this.velocity = new_velocity;
+        //if (!(Object.prototype.toString.call(new_velocity) = "THREE.Vector3")) {
+        //    throw new TypeError("you must pass a THREE.Vector3 obj\n as input for setvelocity");
+        //}
+        //else {
+        this.velocity.set(
+            new_velocity.x,
+            new_velocity.y,
+            new_velocity.z
+        );
             //if the data type is valid, change
             //this.velocity to new_velocity
-        }
+        //}
     },
     setAcceleration: function (new_acceleration) {
         //check if new_acceleration is 3vec
@@ -92,8 +99,8 @@ Particle.prototype = {
             this.acceleration.clone().multiplyScalar(
                 time * time / 2
             );
-        this.mesh.setPosition(
-            this.getPosition.addVectors(
+        this.setPosition(
+            this.getPosition().addVectors(
                 velocity_comp,
                 accel_comp
             )
@@ -115,6 +122,18 @@ Particle.prototype = {
             //get an acceleration vector
             prev.add(cur_accel);
         }, this.acceleration))
+    },
+    update: function () {
+
+        //get time elapsed from start/last
+        //update
+        this.changePosition(Date.now() - this.time);
+        //use this to calculate cur position
+        //by getting the delta t
+
+        //reset the last time
+        this.time = Date.now();
+
     }
 }
 //info for inheritence
