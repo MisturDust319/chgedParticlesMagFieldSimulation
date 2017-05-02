@@ -59,7 +59,7 @@ Particle.prototype = {
     getPosition: function () {
         //returns the particle mesh's position
         //as a three.js Vector3
-        return this.mesh.position;
+        return this.mesh.position.clone();
     },
     setVelocity: function (new_velocity) {
         //check if new_velocity is 3vec

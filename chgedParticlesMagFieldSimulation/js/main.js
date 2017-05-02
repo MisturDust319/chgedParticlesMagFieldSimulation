@@ -138,12 +138,37 @@ var Supervisor = function (scene) {
                 //set the magnetic_field of the selected particle
             );
         }
+
+        this.update = function () {
+            var temp_vec = new THREE.Vector3(0, 0, 0);
+            temp_vec = this.particle.getPosition();
+            this["pos x"] = temp_vec.x;
+            this["pos y"] = temp_vec.y;
+            this["pos z"] = temp_vec.z;
+
+            temp_vec = this.particle.velocity.clone();
+            this["vel x"] = temp_vec.x;
+            this["vel y"] = temp_vec.y;
+            this["vel z"] = temp_vec.z;
+
+            temp_vec = this.particle.acceleration.clone();
+            this["accel x"] = temp_vec.x;
+            this["accel y"] = temp_vec.y;
+            this["accel z"] = temp_vec.z;
+
+            temp_vec = this.particle.magnetic_field.clone();
+            this["mag x"] = temp_vec.x;
+            this["mag y"] = temp_vec.y;
+            this["mag z"] = temp_vec.z; 
+        }
     }
 
+    //add in the guis
     this.menu = new MainMenu();
-
+    
     //create menu obj, and a GUI obj
     var gui = new dat.GUI();
+    var statsGui = new dat.GUI();
 
     //used for tracking the # of particles by type
     this.electronCount = 0;
@@ -175,6 +200,45 @@ var Supervisor = function (scene) {
 
     f_velocity.add(this.menu, 'apply new velocity');
     f_velocity.open();
+
+    var f_acceleration = gui.addFolder('acceleration');
+    f_acceleration.add(this.menu, 'accel x');
+    f_acceleration.add(this.menu, 'accel y');
+    f_acceleration.add(this.menu, 'accel z');
+    //listen won't work as the menu's acceleration
+    //  isn't exactly the same as the particle's
+
+    f_acceleration.add(this.menu, 'apply new acceleration');
+    f_acceleration.open();
+
+    var f_magnetic_field = gui.addFolder('magnetic_field');
+    f_magnetic_field.add(this.menu, 'mag x');
+    f_magnetic_field.add(this.menu, 'mag y');
+    f_magnetic_field.add(this.menu, 'mag z');
+    //listen won't work as the menu's magnetic_field
+    //  isn't exactly the same as the particle's
+
+    f_magnetic_field.add(this.menu, 'apply new magnetic field');
+    f_magnetic_field.open();
+
+    //populate the stats menu
+    //position data
+    statsGui.add(this.menu, "pos x").listen();
+    statsGui.add(this.menu, "pos y").listen();
+    statsGui.add(this.menu, "pos z").listen();
+    //velocity data
+    statsGui.add(this.menu, "vel x").listen();
+    statsGui.add(this.menu, "vel y").listen();
+    statsGui.add(this.menu, "vel z").listen();
+    //accel data
+    statsGui.add(this.menu, "accel x").listen();
+    statsGui.add(this.menu, "accel y").listen();
+    statsGui.add(this.menu, "accel z").listen();
+    //mag data
+    statsGui.add(this.menu, "mag x").listen();
+    statsGui.add(this.menu, "mag y").listen();
+    statsGui.add(this.menu, "mag z").listen();
+    statsGui.close();
 }
 
 var supervisor = new Supervisor(scene);
@@ -198,6 +262,10 @@ function render() {
     //cube.rotation.x += 0.1;
     //cube.rotation.y += 0.1;
     if (state.play) {
+        //update gui
+        supervisor.menu.update();
+
+        //update position
         for (var key in supervisor.particles) {
             supervisor.particles[key].update();
         }
