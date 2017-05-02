@@ -44,7 +44,7 @@ particle1.setVelocity(new THREE.Vector3(
     1.0, 0.0, 0.0
 ));
 
-var B = new THREE.Vector3(0.0, 0.0, 1.0);
+var B = new THREE.Vector3(0.0, 0.0, -1.0);
 
 //set camera's z position to 5
 
