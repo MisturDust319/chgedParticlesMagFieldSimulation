@@ -80,16 +80,19 @@ Particle.prototype = {
     setAcceleration: function (new_acceleration) {
         //check if new_acceleration is 3vec
         //if not, throw type error
-        if (!(Object.prototype.toString.call(new_acceleration) = "THREE.Vector3")) {
-            throw new TypeError("you must pass a THREE.Vector3 as input.");
-        }
-        else {
+        //if (!(Object.prototype.toString.call(new_acceleration) = "THREE.Vector3")) {
+        //    throw new TypeError("you must pass a THREE.Vector3 as input.");
+        //}
+        //else {
             this.acceleration = new_acceleration;
             //if the data type is valid, change
             //this.acceleration to new_acceleration
-        }
+        //}
     },
     changePosition: function (time) {
+        //store the old position to get speed
+        var old_pos = this.getPosition();
+
         //s_f = s_i + vt + 0.5a*t^2
         //a simple kinematics equation
         //  applied in a not so simple way...
@@ -99,11 +102,16 @@ Particle.prototype = {
             this.acceleration.clone().multiplyScalar(
                 time * time / 2
             );
+        var new_pos = this.getPosition().addVectors(
+            velocity_comp,
+            accel_comp
+        );
         this.setPosition(
-            this.getPosition().addVectors(
-                velocity_comp,
-                accel_comp
-            )
+            new_pos
+        );
+
+        this.setVelocity(
+            new_pos.clone().sub(old_pos)
         );
     },
     accelerate: function (acceleration_vectors) {
@@ -115,13 +123,16 @@ Particle.prototype = {
         )
     },
     applyForce: function (force_vectors) {
+        var old_accel = this.acceleration.clone();
         this.setAcceleration(force_vectors.reduce(function (prev, cur) {
             var cur_accel = cur.clone();
             cur_accel.divideScalar(this.mass);
             //copy cur_accel, then divide by the particle's mass to
             //get an acceleration vector
             prev.add(cur_accel);
-        }, this.acceleration))
+        }, new THREE.Vector3(0, 0, 0)));
+
+        this.setAcceleration(old_accel);
     },
     update: function () {
 
@@ -156,7 +167,7 @@ ChargedParticle.prototype.setCharge = function (new_charge) {
     this.charge = new_charge;
 };
 ChargedParticle.prototype.get_magnetic_field = function (other_position) {
-    var radius = new Vector3(0, 0, 0);
+    var radius = new THREE.Vector3(0, 0, 0);
     radius.copy(other_position);
     radius.sub(this.getPosition());
     //gets the radius between the involved particles
