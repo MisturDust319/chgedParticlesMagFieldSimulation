@@ -212,6 +212,6 @@ Electron.prototype.constructor = Electron;
 //functions
 //forces
 function force_mag_point(charge, velocity, field) {
-    var new_vec = new THREE.Vector3().cross(velocity, field);
+    var new_vec = new THREE.Vector3().crossVectors(velocity, field);
     return new_vec.multiplyScalar(charge);
 }

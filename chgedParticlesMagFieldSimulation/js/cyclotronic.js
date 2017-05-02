@@ -36,23 +36,15 @@ document.body.appendChild(renderer.domElement);
 camera.position.z = 10;
 
 var particle1 = new ChargedParticle(scene);
-particle1.setCharge(1e-10000);
-var particle2 = new ChargedParticle(scene);
-particle2.setCharge(1e-10000);
-
+particle1.setCharge(1);
 particle1.setPosition(new THREE.Vector3(
-    0, 0, 0
+    0.0, 2.5, 0.0
 ));
-particle2.setPosition(new THREE.Vector3(
-    2, 0, 0
+particle1.setVelocity(new THREE.Vector3(
+    1.0, 0.0, 0.0
 ));
 
-particle1.setVelocity(new THREE.Vector3(
-    0, 1, 0
-));
-particle2.setVelocity(new THREE.Vector3(
-    0, 0, 0
-));
+var B = new THREE.Vector3(0.0, 0.0, 1.0);
 
 //set camera's z position to 5
 
@@ -68,29 +60,17 @@ function render() {
     //  pause when user chgs tabs
 
     if (state.play) {
-        //get each particle's corresponding mag field
-        var field1 = particle1.get_magnetic_field(particle2.getPosition());
-        var field2 = particle1.get_magnetic_field(particle1.getPosition());
-
-        //get the appropriate mag forces
-        var force1 = force_mag_point(
+        var force = force_mag_point(
             particle1.charge,
             particle1.velocity,
-            field1
-        )
-        var force2 = force_mag_point(
-            particle2.charge,
-            particle2.velocity,
-            field2
+            B
         )
 
         //apply the forces
-        particle1.applyForce([force2]);
-        particle2.applyForce([force1]);
+        particle1.applyForce([force]);
 
         //then update position
         particle1.update();
-        particle2.update();
     }
     renderer.render(scene, camera);
 }
