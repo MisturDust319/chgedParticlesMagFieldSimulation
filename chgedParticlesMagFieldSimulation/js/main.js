@@ -160,9 +160,21 @@ var Supervisor = function (scene) {
     f_position.add(this.menu, 'pos x');
     f_position.add(this.menu, 'pos y');
     f_position.add(this.menu, 'pos z');
+    //listen won't work as the menu's position
+    //  isn't exactly the same as the particle's
 
     f_position.add(this.menu, 'apply new position');
     f_position.open();
+
+    var f_velocity = gui.addFolder('velocity');
+    f_velocity.add(this.menu, 'vel x');
+    f_velocity.add(this.menu, 'vel y');
+    f_velocity.add(this.menu, 'vel z');
+    //listen won't work as the menu's velocity
+    //  isn't exactly the same as the particle's
+
+    f_velocity.add(this.menu, 'apply new velocity');
+    f_velocity.open();
 }
 
 var supervisor = new Supervisor(scene);
