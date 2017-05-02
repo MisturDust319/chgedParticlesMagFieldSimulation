@@ -49,10 +49,13 @@ var Supervisor = function (scene) {
 
     //set up GUI
     var MainMenu = function () {
+        this.particle_type = 'proton';
+       
         this.addParticle = function () {
             console.log("Dummy for addParticle");
+            //console.log("Input for add part: " + this["particle type"]);
             console.log("update particle list");
-        }
+        }        
         this.play_pause = function () {
             state.play = !(state.play);
         }
@@ -178,6 +181,10 @@ var Supervisor = function (scene) {
     gui.add(this.menu, "play_pause");
 
     gui.add(this.menu, "addParticle");
+    gui.add(this.menu, "particle_type",
+        ['proton', 'electron', 'other']
+    );
+
     gui.add(this.menu, "particle", this.menu.particles);
 
     //particle stats
