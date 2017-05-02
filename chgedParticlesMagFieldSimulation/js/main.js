@@ -49,11 +49,41 @@ var Supervisor = function (scene) {
 
     //set up GUI
     var MainMenu = function () {
+        var this_menu = this;
+
         this.particle_type = 'proton';
        
         this.addParticle = function () {
             console.log("Dummy for addParticle");
-            //console.log("Input for add part: " + this["particle type"]);
+            console.log("Input for add part: " + this["particle_type"]);
+            var type = this.particle_type;
+            var new_part = null;
+
+            function makeid() {
+                //from:
+                //http://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
+
+                var text = "";
+                var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+                for (var i = 0; i < 5; i++)
+                    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+                return text;
+            }
+
+            if (type == 'proton') {
+                new_part = new Proton(scene);
+            }
+            else if (type == 'electron') {
+                new_part = new Electron(scene)
+            }
+            else {
+                new_part = new ChargedParticle(scene);
+            }
+
+            supervisor.particles["particle " + makeid()];
+            this_menu.particles = supervisor.particles;
             console.log("update particle list");
         }        
         this.play_pause = function () {
@@ -173,10 +203,6 @@ var Supervisor = function (scene) {
     var gui = new dat.GUI();
     var statsGui = new dat.GUI();
 
-    //used for tracking the # of particles by type
-    this.electronCount = 0;
-    this.protonCount = 0;
-
     //attacch items to GUI
     gui.add(this.menu, "play_pause");
 
@@ -185,7 +211,13 @@ var Supervisor = function (scene) {
         ['proton', 'electron', 'other']
     );
 
-    gui.add(this.menu, "particle", this.menu.particles);
+    function updateParticleList() {
+        gui.__controllers[3].remove();
+        gui.add(this_menu.menu, "particle", this_menu.menu.particles).onChange(
+            updateParticleList()
+        );
+    }
+    gui.add(this.menu, "particle", this.menu.particles).onChange(updateParticleList);
 
     //particle stats
     var f_position = gui.addFolder('position');
